@@ -1,0 +1,144 @@
+# Facial Recognition System Configuration
+
+# Camera Settings
+camera:
+  index: 0                    # Camera index (0 for default)
+  resolution: 1280x720
+  framerate: 30
+  autofocus: true
+  exposure: -1                # -1 for auto
+  fourcc: "MJPG"             # Codec for 4K
+  buffer_size: 4             # Buffer for smooth streaming
+
+# YOLOv8 Model Settings
+yolo:
+  model_type: "n"            # n, s, m, l, x (nano to extra large)
+  confidence_threshold: 0.5
+  iou_threshold: 0.45
+  max_detections: 50
+  agnostic_nms: true
+  augment_inference: false
+
+# Face Recognition Settings
+recognition:
+  method: "LBPH"             # Options: LBPH, Eigen, Fisher, SVM, KNN
+  face_size: [200, 200]      # Standard face size
+  hist_equalization: true
+  gaussian_blur: true
+  clahe_clip_limit: 2.0
+  lbph_radius: 1
+  lbph_neighbors: 8
+  lbph_grid_x: 8
+  lbph_grid_y: 8
+
+  thresholds:
+    unknown: 65              # Below this = unknown
+    high_confidence: 85      # Above this = high confidence
+    min_faces_per_person: 5  # Minimum faces for training
+
+# 4K Processing Optimization
+processing:
+  detection_scale: 0.3      # Scale for detection (0.25-1.0)
+  recognition_scale: 1.0     # Scale for recognition
+  use_multi_threading: true
+  max_workers: 4
+  process_every_n_frames: 2  # Skip frames for performance
+  roi_expansion: 1.0         # Expand face ROI for context
+
+# Display Settings
+display:
+  show_fps: true
+  show_confidence: true
+  show_landmarks: false
+  show_timestamp: true
+  display_resolution: [1920, 1080]  # Downscale for display
+  color_scheme: "green"      # green, blue, red, rainbow
+
+  colors:
+    known: [0, 255, 0]       # Green for known
+    unknown: [0, 0, 255]     # Red for unknown
+    high_confidence: [255, 255, 0]  # Yellow
+    bounding_box: 3          # Thickness in pixels
+
+# Database Settings
+database:
+  type: "sqlite"            # sqlite, mysql, postgres
+  path: "faces.db"
+  auto_backup: true
+  backup_interval: 3600     # seconds
+  encryption: true
+
+  tables:
+    persons: "persons"
+    faces: "faces"
+    logs: "recognition_logs"
+    settings: "system_settings"
+
+# Logging Settings
+logging:
+  level: "INFO"             # DEBUG, INFO, WARNING, ERROR
+  console: true
+  file: true
+  log_file: "logs/system.log"
+  max_size: "10MB"
+  retention: "7 days"
+  format: "{time:YYYY-MM-DD HH:mm:ss} | {level} | {message}"
+
+# Security Settings
+security:
+  encrypt_faces: true
+  require_authentication: false
+  admin_password: "admin123"
+  session_timeout: 3600
+  max_login_attempts: 3
+
+# Export Settings
+export:
+  format: "json"            # json, csv, xml
+  auto_export: false
+  export_path: "exports/"
+  include_images: false
+  compress: true
+
+# Alert Settings
+alerts:
+  enable: false
+  unknown_face_alert: true
+  low_confidence_alert: false
+  threshold: 70
+  notification_method: "console"  # console, email, webhook
+
+# Performance Monitoring
+monitoring:
+  track_fps: true
+  track_memory: true
+  track_cpu: true
+  stats_interval: 5         # seconds
+  log_performance: false
+
+# Advanced Settings
+advanced:
+  use_gpu: true
+  gpu_id: 0
+  precision: "fp16"         # fp32, fp16, int8
+  use_tensorrt: false
+  enable_profiling: false
+  debug_mode: false
+
+  camera:
+    width: 1920
+    height: 1080
+    fps: 30
+
+  face_detection:
+    model: "hog"
+    upsample_times: 1
+
+  liveness:
+    min_liveness_score: 0.80  # Higher threshold = better photo detection
+    texture_threshold: 60
+    methods:
+    texture:
+      threshold: 40  # Lower = more sensitive to smooth textures
+    blink:
+      frames_to_track: 40  # Track more frames for blink detection
